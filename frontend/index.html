@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AEGIS — Gesture Control Test (MapLibre)</title>
+
+  <!-- MapLibre GL JS from CDN -->
+  <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
+  <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ── Map container ───────────────────────────────────────────────────── -->
+  <div id="map"></div>
+
+  <!-- ── Keyboard hint bar ───────────────────────────────────────────────── -->
+  <div id="keyboard-hint">
+    <b>Keyboard:</b>&nbsp;
+    <kbd>W</kbd>/<kbd>S</kbd> zoom &nbsp;|&nbsp;
+    <kbd>A</kbd>/<kbd>D</kbd> pan &nbsp;|&nbsp;
+    <kbd>↑↓</kbd> tilt &nbsp;|&nbsp;
+    <kbd>+</kbd>/<kbd>-</kbd> zoom (scroll wheel also works)
+  </div>
+
+  <!-- ── Gesture client ──────────────────────────────────────────────────── -->
+  <script src="gesture_client.js"></script>
+  <script>
+    // ── Map initialisation ────────────────────────────────────────────────
+    // For standalone testing we use a free MapLibre demo style.
+    // In production (ShobNG) this points to the offline tile server.
+    const TILE_SERVER = 'http://localhost:8080';  // ShobNG tile server
+    const DEMO_STYLE  = 'https://demotiles.maplibre.org/style.json'; // CDN fallback
+
+    const map = new maplibregl.Map({
+      container: 'map',
+      style:     DEMO_STYLE,           // swap to `${TILE_SERVER}/styles/basic/style.json` for offline
+      center:    [34.9885, 32.7940],   // Haifa, Israel (matches ShobNG default)
+      zoom:      12,
+      pitch:     30,
+      bearing:   0,
+      maxPitch:  85,
+    });
+
+    map.addControl(new maplibregl.NavigationControl(), 'top-right');
+    map.addControl(new maplibregl.ScaleControl(),      'bottom-left');
+
+    map.on('load', () => {
+      console.log('[TEST] Map loaded.');
+
+      // Add a few sample markers to give the scene something to look at
+      const sites = [
+        { name: 'Alpha Base',   coords: [34.9885, 32.7940], color: '#ef4444' },
+        { name: 'Bravo Post',   coords: [35.020,  32.810],  color: '#3b82f6' },
+        { name: 'Charlie OP',   coords: [34.970,  32.780],  color: '#22c55e' },
+        { name: 'Delta CP',     coords: [35.005,  32.765],  color: '#f59e0b' },
+      ];
+
+      sites.forEach(site => {
+        const el = document.createElement('div');
+        el.className    = 'custom-marker';
+        el.style.background = site.color;
+        el.title        = site.name;
+
+        new maplibregl.Marker({ element: el })
+          .setLngLat(site.coords)
+          .setPopup(new maplibregl.Popup({ offset: 25 }).setHTML(
+            `<strong style="color:${site.color}">${site.name}</strong>`
+          ))
+          .addTo(map);
+      });
+    });
+
+    // ── GestureController (MapLibre) ──────────────────────────────────────
+    const gestureCtrl = new GestureController({
+      wsUrl:     'ws://localhost:8765',
+      map:       map,
+      zoomSpeed: 0.3,
+      panSpeed:  80,
+      smoothing: 150,
+      showHUD:   true,
+    });
+
+    // ── Keyboard fallback ────────────────────────────────────────────────
+    const KEY_ZOOM_STEP = 0.5;
+    const KEY_PAN_STEP  = 80;
+    const KEY_DUR       = 200;
+
+    document.addEventListener('keydown', (e) => {
+      switch (e.key) {
+        case 'w': case 'W': case '+': case '=':
+          map.easeTo({ zoom: map.getZoom() + KEY_ZOOM_STEP, duration: KEY_DUR }); break;
+        case 's': case 'S': case '-': case '_':
+          map.easeTo({ zoom: map.getZoom() - KEY_ZOOM_STEP, duration: KEY_DUR }); break;
+        case 'a': case 'A': case 'ArrowLeft':
+          map.panBy([-KEY_PAN_STEP, 0], { duration: KEY_DUR }); break;
+        case 'd': case 'D': case 'ArrowRight':
+          map.panBy([KEY_PAN_STEP, 0],  { duration: KEY_DUR }); break;
+        case 'ArrowUp':
+          map.easeTo({ pitch: Math.min(map.getPitch() + 10, 85), duration: KEY_DUR }); break;
+        case 'ArrowDown':
+          map.easeTo({ pitch: Math.max(map.getPitch() - 10, 0),  duration: KEY_DUR }); break;
+      }
+    });
+
+    // Scroll wheel zoom
+    // (MapLibre handles this natively; this block just logs it)
+  </script>
+</body>
+</html>
