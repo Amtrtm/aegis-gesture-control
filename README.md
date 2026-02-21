@@ -54,7 +54,27 @@ The HUD in the bottom-left shows connection status.
 
 ### 4b. Use with ShobNG
 
-Start ShobNG normally, then:
+AEGIS ships a self-contained plugin installer — no commits to the ShobNG repo needed.
+
+**Windows:**
+```powershell
+# From the aegis-gesture-control directory:
+.\install.ps1
+# or specify ShobNG path explicitly:
+.\install.ps1 -ShobNGPath "C:\Projects\ShobNG"
+```
+
+**Linux / macOS / WSL:**
+```bash
+./install.sh
+# or:
+./install.sh /path/to/ShobNG
+```
+
+The installer copies `shobng-plugin/frontend/src/plugins/gesture-control/` into your
+ShobNG installation and prints the next steps.
+
+Then start ShobNG normally and:
 1. Open the **Plugins** panel in the sidebar.
 2. Find **Gesture Control** → enable it.
 3. Click the **›** chevron to expand the config panel.
@@ -92,13 +112,17 @@ aegis-gesture-control/
 
 ## Gestures → MapLibre Actions
 
-| Gesture | MapLibre call |
-|---------|--------------|
-| ✊ Fist / no hand | Idle, no action |
-| 🤏 Pinch closed | `map.easeTo({ zoom: zoom + Δ })` |
-| 🤏 Pinch opened | `map.easeTo({ zoom: zoom - Δ })` |
-| 👋 Swipe left | `map.panBy([-px, 0])` |
-| 👋 Swipe right | `map.panBy([+px, 0])` |
+| Hands | Gesture | MapLibre call |
+|-------|---------|--------------|
+| 2 | Distance increasing | `map.easeTo({ zoom: zoom - Δ })` |
+| 2 | Distance decreasing | `map.easeTo({ zoom: zoom + Δ })` |
+| 2 | Both hands tilt up (nose-up) | `map.easeTo({ pitch: pitch + Δ })` |
+| 2 | Both hands tilt down (nose-down) | `map.easeTo({ pitch: pitch - Δ })` |
+| 1 | ✊ Fist / no hand | Idle, no action |
+| 1 | 👋 Swipe left | `map.panBy([-px, 0])` |
+| 1 | 👋 Swipe right | `map.panBy([+px, 0])` |
+| 1 | 🧭 Rotate CW | `map.easeTo({ bearing: bearing + Δ })` |
+| 1 | 🧭 Rotate CCW | `map.easeTo({ bearing: bearing - Δ })` |
 
 ---
 

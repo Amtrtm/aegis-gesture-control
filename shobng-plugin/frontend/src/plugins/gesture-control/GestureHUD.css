@@ -1,0 +1,153 @@
+/* GestureHUD.css — Gesture Control Plugin Panel Styles */
+
+.gesture-hud {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 4px 0;
+  font-size: 13px;
+  color: #c8d8f0;
+}
+
+/* ── Status row ────────────────────────────────────────────────────────── */
+.gesture-hud__status-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gesture-hud__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 6px currentColor;
+}
+
+.gesture-hud__conn-label {
+  font-weight: 700;
+  letter-spacing: .06em;
+  font-size: 11px;
+  flex: 1;
+}
+
+.gesture-hud__toggle {
+  padding: 3px 10px;
+  border-radius: 4px;
+  border: 1px solid rgba(100,160,255,.35);
+  background: rgba(255,255,255,.05);
+  color: #8fb3d4;
+  font-size: 11px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.gesture-hud__toggle:hover   { background: rgba(255,255,255,.12); color: #fff; }
+.gesture-hud__toggle.active  { background: rgba(239,68,68,.18); border-color: #ef4444; color: #fca5a5; }
+
+/* ── Metrics ───────────────────────────────────────────────────────────── */
+.gesture-hud__metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: rgba(0,0,0,.2);
+  border-radius: 6px;
+  padding: 8px 10px;
+  border: 1px solid rgba(100,160,255,.12);
+}
+
+.gesture-hud__metric {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.gesture-hud__metric .label {
+  color: #607a99;
+  font-size: 11px;
+  letter-spacing: .04em;
+}
+
+.gesture-hud__metric .value {
+  color: #c8d8f0;
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  font-size: 12px;
+}
+
+.gesture-hud__metric .value.accent {
+  color: #7dd3fc;
+  font-weight: 600;
+}
+
+/* ── Gesture reference table ──────────────────────────────────────────── */
+.gesture-hud__ref-title {
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #607a99;
+  margin-bottom: 6px;
+}
+
+.gesture-hud__ref table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.gesture-hud__ref td {
+  padding: 3px 0;
+  font-size: 12px;
+  color: #8fb3d4;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+}
+
+.gesture-hud__ref td:first-child {
+  font-family: 'JetBrains Mono', monospace;
+  color: #c8d8f0;
+  padding-right: 8px;
+  white-space: nowrap;
+}
+
+/* ── Config ────────────────────────────────────────────────────────────── */
+.gesture-hud__config {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gesture-hud__config label {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 11px;
+  color: #607a99;
+  letter-spacing: .04em;
+}
+
+.gesture-hud__config input {
+  background: rgba(0,0,0,.3);
+  border: 1px solid rgba(100,160,255,.2);
+  border-radius: 4px;
+  color: #c8d8f0;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.gesture-hud__config input:focus {
+  border-color: rgba(100,160,255,.5);
+}
+
+.gesture-hud__apply-btn {
+  margin-top: 4px;
+  padding: 6px 12px;
+  border-radius: 5px;
+  border: 1px solid rgba(34,197,94,.4);
+  background: rgba(34,197,94,.1);
+  color: #86efac;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+  align-self: flex-start;
+}
+.gesture-hud__apply-btn:hover { background: rgba(34,197,94,.2); }
